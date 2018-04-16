@@ -6,6 +6,7 @@
         {% for post in posts %}
         <div>
             <h2><a href= "/blog?blog_id={{post.id}}">{{post.title}}</a></h2>
+            <div>Written by <a href = "/blog?user_id={{post.owner_id}}">{{post.owner}}</a></div>
             <div class= "post">{{post.content}}</div>
         </div>
         {% endfor %}
