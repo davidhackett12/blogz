@@ -7,6 +7,7 @@ app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://blogz:launchcode@localhost:8889/blogz'
 app.config['SQLALCHEMY_ECHO'] = True
 db = SQLAlchemy(app)
+app.secret_key = '1234lc'
 
 class Blog(db.Model):
 
@@ -49,7 +50,7 @@ def blog():
    
 @app.route('/newpost', methods=['POST', 'GET'])
 def new_post():
-    owner = User.filter_by(username=session['username']).first()
+    owner = User.query.filter_by(username=session['username']).first()
     if request.method == 'POST':
         blog_title = request.form['title']
         blog_content = request.form['content']
@@ -87,6 +88,43 @@ def login():
             return redirect('/newpost')
         else:
             flash('Username and password combo is incorrect')
+    return render_template('login.html')
+
+@app.route('/sign-up', methods= ['POST', 'GET'])
+def sign_up():
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        verify = request.form['verify']
+        exisiting_user = User.query.filter_by(username=username).first()
+        error = False
+        if exisiting_user:
+            flash("This username is already in use")
+            error = True
+        if password != verify:
+            flash("Passwords do not match")
+            error = True
+        if not username:
+            flash("Username field left blank")
+            error = True
+        if not password:
+            flash("Password field left blank")            
+            error = True
+        if len(username) < 3:
+            flash("Invalid username")
+            error = True
+        if len(password) < 3:
+            flash("Invalid password")
+            error =True
+        if error == False:
+            new_user = User(username, password)
+            db.session.add(new_user)
+            db.session.commit()
+            session['username'] = username
+            return redirect('/newpost')
+
+    return render_template('sign-up.html')
+
 
 if __name__ == '__main__':
     app.run() 
