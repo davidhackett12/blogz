@@ -5,11 +5,12 @@
     
         {% for post in posts %}
         <div>
-            <h2><a href= "/blog?blog_id={{post.id}}">{{post.title}}</a></h2>
-            <div>Written by <a href = "/blog?user_id={{post.owner_id}}">{{post.owner}}</a></div>
+            <h2><a href= "/blog?id={{post.id}}">{{post.title}}</a></h2>
             <div class= "post">{{post.content}}</div>
+            <div class= "time">Written by <a href = "/blog?user_id={{post.owner_id}}">{{post.owner}}</a> {{post.pub_date}}</div>
         </div>
         {% endfor %}
+        
 
 
 

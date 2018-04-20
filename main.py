@@ -46,11 +46,11 @@ def require_login():
 
 @app.route('/blog')
 def blog():
-    blog_id = request.args.get("blog_id")
+    blog_id = request.args.get("id")
     user_id = request.args.get("user_id")
     if blog_id:
         blog = Blog.query.filter_by(id=blog_id).first()
-        return render_template('oldpost.html', title = blog.title, content = blog.content)
+        return render_template('oldpost.html', title = blog.title, content = blog.content, blogger = blog.owner, time = blog.pub_date, owner_id = blog.owner_id)
     elif user_id:
         owner_id = user_id
         posts = Blog.query.filter_by(owner_id=owner_id).all()
